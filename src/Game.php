@@ -5,17 +5,21 @@ namespace DoekeNorg\TicTacToe;
 final class Game
 {
     private Mark $turn = Mark::X;
+    private Grid $grid;
 
     private function __construct(
-        private Grid $grid,
+        private readonly GameEventListener $lister,
+        int $size = 3,
     ) {
+        $this->grid = Grid::empty($size);
+
+        $this->lister->gameStarted($this, $this->grid);
+        $this->lister->turnSwitched($this->turn);
     }
 
-    public static function new(?Grid $grid = null): Game
+    public static function new(GameEventListener $lister, int $size = 3): Game
     {
-        return new self(
-            $grid ?? Grid::empty(),
-        );
+        return new self($lister, $size);
     }
 
     public function placeMark(int $square): void
@@ -25,22 +29,33 @@ final class Game
         }
 
         $this->grid = $this->grid->placeMark($square, $this->turn);
-        $this->opponentsTurn();
+
+        if ($this->isFinished()) {
+            $this->isDraw()
+                ? $this->lister->finishedAsDraw($this->grid)
+                : $this->lister->finishedWithWinner($this->grid, $this->findWinner());
+        } else {
+            $this->lister->markPlaced($this->grid);
+            $this->switchTurn();
+        }
     }
 
-    public function turn(): Mark
+
+    public function size(): int
     {
-        return $this->turn;
+        return $this->grid->size;
     }
 
-    private function opponentsTurn(): void
+    private function switchTurn(): void
     {
         $this->turn = $this->turn === Mark::X
             ? Mark::O
             : Mark::X;
+
+        $this->lister->turnSwitched($this->turn);
     }
 
-    public function isFinished(): bool
+    private function isFinished(): bool
     {
         if ($this->findWinner()) {
             return true;
@@ -49,12 +64,12 @@ final class Game
         return !in_array(null, $this->grid->getSquares()->toArray(), true);
     }
 
-    public function isDraw(): bool
+    private function isDraw(): bool
     {
         return $this->isFinished() && !$this->findWinner();
     }
 
-    public function findWinner(): ?Mark
+    private function findWinner(): ?Mark
     {
         $squares = $this->grid->getSquares();
         foreach ($this->getLines() as $line) {
@@ -102,10 +117,5 @@ final class Game
         $lines[] = $rtl;
 
         return $lines;
-    }
-
-    public function formatOutput(GridOutput $output): void
-    {
-        $output->output($this->grid);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+namespace DoekeNorg\TicTacToe\Tests;
 
 use DoekeNorg\TicTacToe\AsciiGridOutput;
 use DoekeNorg\TicTacToe\Grid;
@@ -19,23 +20,24 @@ final class AsciiGridOutputTest extends TestCase
     public function testOutput(): void
     {
         $grid = Grid::empty();
-        $grid->placeMark(1, Mark::X);
-        $grid->placeMark(2, Mark::O);
+        $grid = $grid->placeMark(1, Mark::X);
+        $grid = $grid->placeMark(2, Mark::O);
+
         $ascii = new AsciiGridOutput();
-        $ascii->output($grid);
+        $output = $ascii->output($grid);
 
         self::assertSame(
             <<<GRID
 +---+---+---+
-|   | X | O |
+| 1 | \e[1;34mX\e[0m | \e[1;32mO\e[0m |
 +---+---+---+
-|   |   |   |
+| 4 | 5 | 6 |
 +---+---+---+
-|   |   |   |
+| 7 | 8 | 9 |
 +---+---+---+
 GRID
             ,
-            $ascii->getOutput()
+            $output,
         );
     }
 }

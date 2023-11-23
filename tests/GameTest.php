@@ -1,8 +1,8 @@
 <?php
 
+namespace DoekeNorg\TicTacToe\Tests;
 
 use DoekeNorg\TicTacToe\Game;
-use DoekeNorg\TicTacToe\Grid;
 use DoekeNorg\TicTacToe\Mark;
 use PHPUnit\Framework\TestCase;
 
@@ -18,8 +18,8 @@ final class GameTest extends TestCase
      */
     public function testPlaceMark(): void
     {
-        $grid = Grid::empty(3);
-        $game = Game::new($grid);
+        $listener = new TestGameListener();
+        $game = Game::new($listener);
         $game->placeMark(0); // X
         $game->placeMark(4); // O
         $game->placeMark(1); // X
@@ -36,13 +36,13 @@ final class GameTest extends TestCase
             null,
             null,
             null,
-        ], $grid->getSquares()->toArray());
+        ], $listener->getLastGrid()->getSquares()->toArray());
     }
 
     public function testPlaceMarkAfterFinished(): void
     {
-        $this->expectException(RuntimeException::class);
-        $game = Game::new();
+        $this->expectException(\RuntimeException::class);
+        $game = Game::new(new TestGameListener());
         $game->placeMark(0); // X
         $game->placeMark(4); // O
         $game->placeMark(1); // X
@@ -117,13 +117,14 @@ final class GameTest extends TestCase
         bool $is_finished,
         bool $is_draw
     ): void {
-        $game = Game::new(Grid::empty($size));
+        $listener = new TestGameListener();
+        $game = Game::new($listener, $size);
         foreach ($moves as $square) {
             $game->placeMark($square);
         }
 
-        self::assertSame($expected_winner, $game->findWinner());
-        self::assertSame($is_finished, $game->isFinished());
-        self::assertSame($is_draw, $game->isDraw());
+        self::assertSame($expected_winner, $listener->findWinner());
+        self::assertSame($is_finished, $listener->isFinished());
+        self::assertSame($is_draw, $listener->isDraw());
     }
 }

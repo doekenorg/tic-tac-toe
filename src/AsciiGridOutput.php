@@ -2,31 +2,47 @@
 
 namespace DoekeNorg\TicTacToe;
 
-final class AsciiGridOutput implements GridOutput
+/**
+ * Outputs a {@see Grid} object as an ASCII representation.
+ */
+final class AsciiGridOutput
 {
-    private string $output;
-
-    public function output(Grid $grid): void
+    public function output(Grid $grid): string
     {
-        $this->output = '';
+        $output = '';
         foreach ($grid->getSquares() as $i => $square) {
             if ($i === 0 || $i % $grid->size === 0) {
-                $this->output .= ($this->output !== '' ? "\n" : '');
-                $this->output .= $this->line($grid->size);
-                $this->output .= "\n|";
+                $output .= ($output !== '' ? "\n" : '');
+                $output .= $this->line($grid->size);
+                $output .= "\n|";
             }
-            $this->output .= sprintf(' %s ', $square?->value ?? ' ') . '|';
+
+            $value = str_pad($this->format($square) ?? ($i + 1), strlen($grid->size * $grid->size));
+            $output .= sprintf(' %s ', $value) . '|';
         }
-        $this->output .= "\n" . $this->line($grid->size);
+        return $output . "\n" . $this->line($grid->size);
     }
 
+    // Represents a break line that makes up the grid.
     private function line(int $size): string
     {
-        return '+' . str_repeat('---+', $size);
+        return '+' . str_repeat(sprintf('-%s-+', str_repeat('-', strlen($size * $size))), $size);
     }
 
-    public function getOutput(): string
+    private function colorCode(Mark $mark): int
     {
-        return $this->output;
+        return match ($mark) {
+            Mark::X => 34,
+            Mark::O => 32,
+        };
+    }
+
+    public function format(?Mark $mark): ?string
+    {
+        if (!$mark) {
+            return null;
+        }
+
+        return sprintf("\e[1;%dm%s\e[0m", $this->colorCode($mark), $mark->value);
     }
 }

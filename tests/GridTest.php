@@ -1,5 +1,6 @@
 <?php
 
+namespace DoekeNorg\TicTacToe\Tests;
 
 use DoekeNorg\TicTacToe\Grid;
 use DoekeNorg\TicTacToe\Mark;
@@ -41,15 +42,19 @@ final class GridTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
         $grid = Grid::empty();
-        $grid->placeMark(1, Mark::X);
-        $grid->placeMark(1, Mark::O);
+        $new = $grid->placeMark(1, Mark::X);
+        $new->placeMark(1, Mark::O);
     }
 
+    /**
+     * Test case for {@see Grid::getSquares()}.
+     * @since $ver$
+     */
     public function testGetSquares(): void
     {
         $grid = Grid::empty(2);
-        $grid->placeMark(1, Mark::X);
-        $grid->placeMark(2, Mark::O);
+        $grid = $grid->placeMark(1, Mark::X);
+        $grid = $grid->placeMark(2, Mark::O);
 
         self::assertSame([
             null,

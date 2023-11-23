@@ -1,10 +1,13 @@
 <?php
 
 use DoekeNorg\TicTacToe\Game;
-use DoekeNorg\TicTacToe\Rendering\CliOutput;
+use DoekeNorg\TicTacToe\Rendering\CliUserInterface;
 
 require 'vendor/autoload.php';
 
-$game = Game::new();
-$cli = new CliOutput($game);
+$size = (int)$argv[1] ?: 3;
+
+$cli = new CliUserInterface();
+$game = Game::new($cli, $size);
+
 $cli->run();

@@ -40,4 +40,9 @@ final class Grid
     {
         return clone $this->squares;
     }
+
+    public function __clone(): void
+    {
+        $this->squares = clone $this->squares;
+    }
 }
