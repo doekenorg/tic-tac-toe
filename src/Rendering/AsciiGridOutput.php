@@ -1,6 +1,9 @@
 <?php
 
-namespace DoekeNorg\TicTacToe;
+namespace DoekeNorg\TicTacToe\Rendering;
+
+use DoekeNorg\TicTacToe\Grid;
+use DoekeNorg\TicTacToe\Mark;
 
 /**
  * Outputs a {@see Grid} object as an ASCII representation.

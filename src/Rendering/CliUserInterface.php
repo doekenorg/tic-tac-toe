@@ -2,11 +2,10 @@
 
 namespace DoekeNorg\TicTacToe\Rendering;
 
-use DoekeNorg\TicTacToe\AsciiGridOutput;
 use DoekeNorg\TicTacToe\Game;
+use DoekeNorg\TicTacToe\GameEventListener;
 use DoekeNorg\TicTacToe\Grid;
 use DoekeNorg\TicTacToe\Mark;
-use DoekeNorg\TicTacToe\GameEventListener;
 
 final class CliUserInterface implements GameEventListener
 {

@@ -2,9 +2,9 @@
 
 namespace DoekeNorg\TicTacToe\Tests;
 
-use DoekeNorg\TicTacToe\AsciiGridOutput;
 use DoekeNorg\TicTacToe\Grid;
 use DoekeNorg\TicTacToe\Mark;
+use DoekeNorg\TicTacToe\Rendering\AsciiGridOutput;
 use PHPUnit\Framework\TestCase;
 
 /**
