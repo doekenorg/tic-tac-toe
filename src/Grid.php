@@ -2,7 +2,9 @@
 
 namespace DoekeNorg\TicTacToe;
 
-final class Grid
+use Countable;
+
+final class Grid implements Countable
 {
     private \SplFixedArray $squares;
 
@@ -44,5 +46,10 @@ final class Grid
     public function __clone(): void
     {
         $this->squares = clone $this->squares;
+    }
+
+    public function count(): int
+    {
+        return $this->size * $this->size;
     }
 }

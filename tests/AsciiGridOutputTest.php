@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 final class AsciiGridOutputTest extends TestCase
 {
     /**
-     * Test case for {@see AsciiGridOutput::output()}.
+     * Test case for {@see AsciiGridOutput::render()}.
      * @since $ver$
      */
     public function testOutput(): void
@@ -24,7 +24,7 @@ final class AsciiGridOutputTest extends TestCase
         $grid = $grid->placeMark(2, Mark::O);
 
         $ascii = new AsciiGridOutput();
-        $output = $ascii->output($grid);
+        $output = $ascii->render($grid);
 
         self::assertSame(
             <<<GRID

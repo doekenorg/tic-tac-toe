@@ -40,10 +40,9 @@ final class Game
         }
     }
 
-
-    public function size(): int
+    public function squareCount(): int
     {
-        return $this->grid->size;
+        return $this->grid->count();
     }
 
     private function switchTurn(): void

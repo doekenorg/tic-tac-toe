@@ -7,9 +7,10 @@ namespace DoekeNorg\TicTacToe;
  */
 final class AsciiGridOutput
 {
-    public function output(Grid $grid): string
+    public function render(Grid $grid): string
     {
         $output = '';
+        $max_length = strlen($grid->count());
         foreach ($grid->getSquares() as $i => $square) {
             if ($i === 0 || $i % $grid->size === 0) {
                 $output .= ($output !== '' ? "\n" : '');
@@ -17,7 +18,14 @@ final class AsciiGridOutput
                 $output .= "\n|";
             }
 
-            $value = str_pad($this->format($square) ?? ($i + 1), strlen($grid->size * $grid->size));
+            $value = $this->formatMark($square) ?? ($i + 1);
+
+            // Making sure the output does not skew the squares.
+            $length = $square ? 1 : strlen($value); // Because of formatting; a square is longer; but effectively 1.
+            if ($max_length > 1 && $length < $max_length) {
+                $value .= str_repeat(' ', max(0, $max_length - $length));
+            }
+
             $output .= sprintf(' %s ', $value) . '|';
         }
         return $output . "\n" . $this->line($grid->size);
@@ -37,7 +45,7 @@ final class AsciiGridOutput
         };
     }
 
-    public function format(?Mark $mark): ?string
+    private function formatMark(?Mark $mark): ?string
     {
         if (!$mark) {
             return null;

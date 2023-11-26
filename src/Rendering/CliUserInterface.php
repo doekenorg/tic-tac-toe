@@ -85,7 +85,7 @@ final class CliUserInterface implements GameEventListener
     private function askForSquare(): ?int
     {
         $input = null;
-        $max_size = $this->game->size() * $this->game->size();
+        $max_size = $this->game->squareCount();
         while (!is_numeric($input) || $input < 1 || $input > $max_size) {
             if ($input !== null) {
                 $this->removeLines(1);
@@ -121,7 +121,7 @@ final class CliUserInterface implements GameEventListener
     private function recordGrid(Grid $grid): void
     {
         $this->cleanWindow();
-        $this->recordOutput($this->gridOutput->output($grid));
+        $this->recordOutput($this->gridOutput->render($grid));
     }
 
     private function recordTurn(Mark $turn): void
