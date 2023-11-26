@@ -8,13 +8,14 @@ final class Game
     private Grid $grid;
 
     private function __construct(
-        private readonly GameEventListener $lister,
+        // If the game were complexer; I'd remove this and record and flush events.
+        private readonly GameEventListener $listener,
         int $size = 3,
     ) {
         $this->grid = Grid::empty($size);
 
-        $this->lister->gameStarted($this, $this->grid);
-        $this->lister->turnSwitched($this->turn);
+        $this->listener->gameStarted($this, $this->grid);
+        $this->listener->turnSwitched($this->turn);
     }
 
     public static function new(GameEventListener $lister, int $size = 3): Game
@@ -32,10 +33,10 @@ final class Game
 
         if ($this->isFinished()) {
             $this->isDraw()
-                ? $this->lister->finishedAsDraw($this->grid)
-                : $this->lister->finishedWithWinner($this->grid, $this->findWinner());
+                ? $this->listener->finishedAsDraw($this->grid)
+                : $this->listener->finishedWithWinner($this->grid, $this->findWinner());
         } else {
-            $this->lister->markPlaced($this->grid);
+            $this->listener->markPlaced($this->grid);
             $this->switchTurn();
         }
     }
@@ -51,7 +52,7 @@ final class Game
             ? Mark::O
             : Mark::X;
 
-        $this->lister->turnSwitched($this->turn);
+        $this->listener->turnSwitched($this->turn);
     }
 
     private function isFinished(): bool

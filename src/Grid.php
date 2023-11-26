@@ -50,6 +50,6 @@ final class Grid implements Countable
 
     public function count(): int
     {
-        return $this->size * $this->size;
+        return $this->squares->count();
     }
 }
